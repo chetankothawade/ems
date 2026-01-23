@@ -1,0 +1,9 @@
+<?php
+namespace App\Support\Clock;    
+final class SystemClock implements ClockInterface
+{
+    public function now(): \DateTimeImmutable
+    {
+        return new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+    }
+}

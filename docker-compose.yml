@@ -1,0 +1,57 @@
+
+services:
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: docker/php/Dockerfile
+    container_name: ems_api
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+    depends_on:
+      - db
+    ports:
+      - "8080:8000"
+    command: php -S 0.0.0.0:8000 -t public
+    environment:
+      APP_ENV: dev
+      DB_HOST: db
+      DB_NAME: ems
+      DB_USER: ems
+      DB_PASSWORD: secret
+
+
+
+  db:
+    image: mysql:8.0
+    container_name: ems_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: ems
+      MYSQL_USER: ems
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ems_frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - api
+
+
+
+volumes:
+  db_data:

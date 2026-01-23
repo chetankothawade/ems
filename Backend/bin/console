@@ -1,0 +1,62 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+use Symfony\Component\Console\Application;
+use Doctrine\Migrations\DependencyFactory;
+use Doctrine\Migrations\Configuration\Migration\PhpFile;
+
+use App\Console\SeedCommand;
+use Doctrine\ORM\EntityManager;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+
+/*
+|--------------------------------------------------------------------------
+| Container
+|--------------------------------------------------------------------------
+*/
+$container = require __DIR__ . '/../config/container.php';
+
+
+/*
+|--------------------------------------------------------------------------
+| Symfony Console
+|--------------------------------------------------------------------------
+*/
+$cli = new Application('EMS CLI');
+
+
+/*
+|--------------------------------------------------------------------------
+| Doctrine Migrations Setup
+|--------------------------------------------------------------------------
+*/
+$entityManager = $container->get(EntityManager::class);
+
+$config = new PhpFile(__DIR__ . '/../config/migrations.php');
+
+
+$dependencyFactory = DependencyFactory::fromEntityManager(
+    $config,
+    new \Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager($entityManager)
+);
+
+$cli->addCommands([
+    new \Doctrine\Migrations\Tools\Console\Command\DiffCommand($dependencyFactory),
+    new \Doctrine\Migrations\Tools\Console\Command\MigrateCommand($dependencyFactory),
+    new \Doctrine\Migrations\Tools\Console\Command\StatusCommand($dependencyFactory),
+    new \Doctrine\Migrations\Tools\Console\Command\ExecuteCommand($dependencyFactory),
+]);
+
+
+/*
+|--------------------------------------------------------------------------
+| Custom Commands
+|--------------------------------------------------------------------------
+*/
+$cli->add($container->get(SeedCommand::class));
+
+
+$cli->run();

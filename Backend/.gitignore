@@ -1,0 +1,81 @@
+# Dependencies
+/vendor/
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.staging
+
+# Cache
+/cache/
+/var/cache/
+/tmp/
+
+# Logs
+*.log
+/logs/
+/var/log/
+
+# Symfony cache (if used)
+/var/
+/app/var/
+
+# Doctrine cache
+doctrine-module/cache/
+
+# PHPUnit
+/phpunit.xml
+.phpunit.result.cache
+/tests/coverage/
+/tests/.phpunit.result.cache
+
+# Composer
+composer.lock
+composer.phar
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# Build and deployment
+/build/
+/dist/
+
+# Database files (if any local SQLite)
+/*.db
+/*.sqlite
+/*.sqlite3
+
+# Node.js (if any frontend assets, but unlikely)
+/node_modules/
+/npm-debug.log*
+/yarn-error.log*
+/yarn.lock
+
+# Docker (optional)
+/.docker/
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Migration backups (if any)
+migrations/backup/
