@@ -28,6 +28,32 @@ A simple backend application for Exam Management System built with PHP and Slim 
 
 4. Set up your database configuration in the `.env` file.
 
+## Docker Setup (Optional)
+
+If you prefer to run the application using Docker:
+
+1. Build the Docker images:
+   ```bash
+   docker-compose build
+   ```
+
+2. Start the services:
+   ```bash
+   docker-compose up
+   ```
+
+   The API will be available at `http://localhost:8000`.
+
+3. To run commands inside the container:
+   ```bash
+   docker-compose run api <command>
+   ```
+
+   For example, to run migrations:
+   ```bash
+   docker-compose run api php bin/console migrations:migrate
+   ```
+
 ## Database Setup
 
 ### Create Migrations
@@ -61,11 +87,17 @@ php bin/console db:seed
 
 ## Running the Application
 
+### Local Development
+
 Start the development server:
 ```bash
 composer dump-autoload
 php -S localhost:8000 -t public
 ```
+
+### Using Docker
+
+If using Docker, the application will be available at `http://localhost:8000` after running `docker-compose up`.
 
 The API will be available at `http://localhost:8000`.
 
@@ -99,6 +131,17 @@ composer run test:unit
 # Integration tests
 composer run test:int
 ```
+
+### Test Coverage
+
+The test suite includes:
+
+- **Unit Tests**: Test individual components in isolation
+- **Integration Tests**: Test service layer interactions with the database
+- **API Integration Tests**: Test HTTP endpoints end-to-end, including:
+  - Admin exam management (create, update, attempt history)
+  - Student exam dashboard and attempt management
+  - Full request/response cycle validation
 
 ## Project Structure
 

@@ -8,7 +8,7 @@ class AdminExamController extends Controller
 {
     public function __construct(
         private ExamService $service,
-        private AttemptRepository $attemptRepo   // ⭐ inject repo
+        private AttemptRepository $attemptRepo
     ) {}
 
     public function create($req, $res)

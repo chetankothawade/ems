@@ -26,7 +26,7 @@ class ExamService
         return $exam;
     }
 
-    // 🔥 reset attempts on update
+    //reset attempts on update
     public function update(string $id, array $data): void
     {
         $exam = $this->examRepo->find($id);
