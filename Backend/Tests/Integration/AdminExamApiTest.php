@@ -4,13 +4,15 @@ namespace Tests\Integration;
 
 use App\Models\Exam;
 use App\Models\Attempt;
+use Ramsey\Uuid\Uuid;
 
 class AdminExamApiTest extends ApiTestCase
 {
     public function test_create_exam(): void
     {
+        $examId = Uuid::uuid4()->toString();
         $examData = [
-            'id' => 'exam-1',
+            'id' => $examId,
             'title' => 'Test Exam',
             'max_attempts' => 3,
             'cooldown_minutes' => 60
@@ -26,7 +28,7 @@ class AdminExamApiTest extends ApiTestCase
         $this->assertJsonResponse($response, 200);
 
         $data = $this->getJsonResponse($response);
-        $this->assertEquals('exam-1', $data['id']);
+        $this->assertEquals($examId, $data['id']);
         $this->assertEquals('Test Exam', $data['title']);
         $this->assertEquals(3, $data['max_attempts']);
         $this->assertEquals(60, $data['cooldown_minutes']);
@@ -38,7 +40,7 @@ class AdminExamApiTest extends ApiTestCase
     {
         // Create exam first
         $exam = new Exam();
-        $exam->id = 'exam-1';
+        $exam->id = Uuid::uuid4()->toString();
         $exam->title = 'Original Title';
         $exam->max_attempts = 1;
         $exam->cooldown_minutes = 0;
@@ -55,7 +57,7 @@ class AdminExamApiTest extends ApiTestCase
 
         $response = $this->makeRequest(
             'PUT',
-            '/admin/exams/exam-1',
+            '/admin/exams/' . $exam->id,
             ['Content-Type' => 'application/json'],
             json_encode($updateData)
         );
@@ -73,7 +75,7 @@ class AdminExamApiTest extends ApiTestCase
     {
         // Create exam
         $exam = new Exam();
-        $exam->id = 'exam-1';
+        $exam->id = Uuid::uuid4()->toString();
         $exam->title = 'Test Exam';
         $exam->max_attempts = 2;
         $exam->cooldown_minutes = 0;
@@ -82,7 +84,7 @@ class AdminExamApiTest extends ApiTestCase
 
         // Create attempts
         $attempt1 = new Attempt();
-        $attempt1->id = 'attempt-1';
+        $attempt1->id = Uuid::uuid4()->toString();
         $attempt1->exam_id = $exam->id;
         $attempt1->student_id = 'student-1';
         $attempt1->attempt_number = 1;
@@ -91,7 +93,7 @@ class AdminExamApiTest extends ApiTestCase
         $attempt1->completed_at = new \DateTimeImmutable('2024-01-01 10:30:00');
 
         $attempt2 = new Attempt();
-        $attempt2->id = 'attempt-2';
+        $attempt2->id = Uuid::uuid4()->toString();
         $attempt2->exam_id = $exam->id;
         $attempt2->student_id = 'student-2';
         $attempt2->attempt_number = 1;
@@ -103,7 +105,7 @@ class AdminExamApiTest extends ApiTestCase
         $this->em->persist($attempt2);
         $this->em->flush();
 
-        $response = $this->makeRequest('GET', '/admin/exams/exam-1/attempts');
+        $response = $this->makeRequest('GET', '/admin/exams/' . $exam->id . '/attempts');
 
         $this->assertJsonResponse($response, 200);
 
@@ -112,8 +114,8 @@ class AdminExamApiTest extends ApiTestCase
 
         // Check that attempts are returned with correct data
         $attemptIds = array_column($data, 'id');
-        $this->assertContains('attempt-1', $attemptIds);
-        $this->assertContains('attempt-2', $attemptIds);
+        $this->assertContains($attempt1->id, $attemptIds);
+        $this->assertContains($attempt2->id, $attemptIds);
     }
 
     public function test_get_attempt_history_for_nonexistent_exam(): void

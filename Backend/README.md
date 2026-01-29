@@ -6,7 +6,10 @@ A simple backend application for Exam Management System built with PHP and Slim 
 
 - PHP 8.2 or higher
 - Composer
-- Docker (optional, for containerized setup)
+- MySQL or compatible database
+- Docker and Docker Compose (optional, for containerized setup)
+
+**Note**: For Docker setup, ensure you have a `docker-compose.yml` file configured for the project (not included in this repository).
 
 ## Installation
 
@@ -28,35 +31,11 @@ A simple backend application for Exam Management System built with PHP and Slim 
 
 4. Set up your database configuration in the `.env` file.
 
-## Docker Setup (Optional)
-
-If you prefer to run the application using Docker:
-
-1. Build the Docker images:
-   ```bash
-   docker-compose build
-   ```
-
-2. Start the services:
-   ```bash
-   docker-compose up
-   ```
-
-   The API will be available at `http://localhost:8000`.
-
-3. To run commands inside the container:
-   ```bash
-   docker-compose run api <command>
-   ```
-
-   For example, to run migrations:
-   ```bash
-   docker-compose run api php bin/console migrations:migrate
-   ```
-
 ## Database Setup
 
-### Create Migrations
+### Local Setup
+
+#### Create Migrations
 
 Generate a new migration:
 ```bash
@@ -68,21 +47,44 @@ Or create from differences:
 php bin/console migrations:diff
 ```
 
-### Run Migrations
+#### Run Migrations
 
 ```bash
 php bin/console migrations:migrate
 ```
 
-For Docker:
-```bash
-docker-compose run api php bin/console migrations:migrate
-```
-
-### Seed Database
+#### Seed Database
 
 ```bash
 php bin/console db:seed
+```
+
+### Docker Setup
+
+If using Docker, run commands inside the container:
+
+#### Create Migrations
+
+Generate a new migration:
+```bash
+docker compose run api php bin/console migrations:generate
+```
+
+Or create from differences:
+```bash
+docker compose run api php bin/console migrations:diff
+```
+
+#### Run Migrations
+
+```bash
+docker compose run api php bin/console migrations:migrate
+```
+
+#### Seed Database
+
+```bash
+docker compose run api php bin/console db:seed
 ```
 
 ## Running the Application
@@ -95,9 +97,19 @@ composer dump-autoload
 php -S localhost:8000 -t public
 ```
 
-### Using Docker
+The API will be available at `http://localhost:8000`.
 
-If using Docker, the application will be available at `http://localhost:8000` after running `docker-compose up`.
+### Docker Setup
+
+1. Build the Docker images:
+   ```bash
+   docker compose build
+   ```
+
+2. Start the services:
+   ```bash
+   docker compose up
+   ```
 
 The API will be available at `http://localhost:8000`.
 
@@ -118,6 +130,8 @@ The API will be available at `http://localhost:8000`.
 
 ## Testing
 
+### Local Setup
+
 Run the test suite:
 ```bash
 composer test
@@ -130,6 +144,20 @@ composer run test:unit
 
 # Integration tests
 composer run test:int
+```
+
+### Docker Setup
+
+Run tests inside the container:
+```bash
+# Full test suite
+docker compose run api composer test
+
+# Run Unit tests
+docker compose run api composer run test:unit
+
+# Run Integration tests
+docker compose run api composer run test:int
 ```
 
 ### Test Coverage
@@ -149,7 +177,7 @@ The test suite includes:
 - `config/` - Configuration files
 - `migrations/` - Database migrations
 - `public/` - Public web directory
-- `tests/` - Test files
+- `Tests/` - Test files
 
 ## Technologies Used
 

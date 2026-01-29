@@ -30,7 +30,11 @@ $container->set(EntityManager::class, function () {
         'user'     => $_ENV['DB_USER'] ?? 'root',
         'password' => $_ENV['DB_PASSWORD'] ?? '',
         'charset'  => 'utf8mb4',
+
+        //'use_savepoints' => false,
     ];
+
+    
 
     $connection = DriverManager::getConnection($connectionParams, $config);
 

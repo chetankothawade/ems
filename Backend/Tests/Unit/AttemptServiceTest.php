@@ -10,6 +10,7 @@ use App\Repositories\ExamRepository;
 use App\Support\Clock\ClockInterface;
 use App\Models\Exam;
 use App\Models\Attempt;
+use Ramsey\Uuid\Uuid;
 
 class AttemptServiceTest extends TestCase
 {
@@ -40,7 +41,7 @@ class AttemptServiceTest extends TestCase
     public function test_start_attempt_success(): void
     {
         $exam = new Exam();
-        $exam->id = 'exam-1';
+        $exam->id = Uuid::uuid4()->toString();
         $exam->max_attempts = 3;
         $exam->cooldown_minutes = 0;
 
@@ -55,7 +56,7 @@ class AttemptServiceTest extends TestCase
             ->method('create')
             ->willReturn(new Attempt());
 
-        $attempt = $this->service->start('exam-1', 'student-1');
+        $attempt = $this->service->start($exam->id, 'student-1');
 
         $this->assertInstanceOf(Attempt::class, $attempt);
     }
@@ -70,7 +71,7 @@ class AttemptServiceTest extends TestCase
     public function test_cannot_start_when_no_attempts_left(): void
     {
         $exam = new Exam();
-        $exam->id = 'exam-1';
+        $exam->id = Uuid::uuid4()->toString();
         $exam->max_attempts = 1;
         $exam->cooldown_minutes = 0;
 
@@ -82,7 +83,7 @@ class AttemptServiceTest extends TestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('No attempts left.');
 
-        $this->service->start('exam-1', 'student-1');
+        $this->service->start($exam->id, 'student-1');
     }
 
 
@@ -95,7 +96,7 @@ class AttemptServiceTest extends TestCase
     public function test_cannot_start_during_cooldown(): void
     {
         $exam = new Exam();
-        $exam->id = 'exam-1';
+        $exam->id = Uuid::uuid4()->toString();
         $exam->max_attempts = 3;
         $exam->cooldown_minutes = 10;
 
@@ -110,7 +111,7 @@ class AttemptServiceTest extends TestCase
 
         $this->expectException(\Exception::class);
 
-        $this->service->start('exam-1', 'student-1');
+        $this->service->start($exam->id, 'student-1');
     }
 
 

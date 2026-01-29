@@ -1,0 +1,7 @@
+- [x] Update Prerequisites Section: Add clear requirements for local and Docker, including mention of docker-compose.yml for Docker.
+- [x] Update Installation Section: Ensure steps are sequential and clear for both setups.
+- [x] Update Database Setup Section: Merge duplicated content into one section with subsections for Local and Docker.
+- [x] Update Running the Application Section: Separate into Local and Docker subsections, remove redundancy.
+- [x] Update Testing Section: Organize with subsections for Local and Docker, using Composer scripts.
+- [x] Minor tweaks to Project Structure and Technologies: Improve clarity.
+- [x] Overall formatting and consistency fixes: Fix typos, formatting inconsistencies, and ensure no duplications.

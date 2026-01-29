@@ -7,6 +7,7 @@ use App\Repositories\AttemptRepository;
 use App\Repositories\ExamRepository;
 use App\Support\Clock\SystemClock;
 use App\Models\Exam;
+use Ramsey\Uuid\Uuid;
 
 class AttemptServiceIntegrationTest extends DatabaseTestCase
 {
@@ -30,7 +31,7 @@ class AttemptServiceIntegrationTest extends DatabaseTestCase
     {
         // Create real exam
         $exam = new Exam();
-        $exam->id = 'exam-1';
+        $exam->id = Uuid::uuid4()->toString();
         $exam->title = 'Integration Test';
         $exam->max_attempts = 2;
         $exam->cooldown_minutes = 0;
@@ -39,7 +40,7 @@ class AttemptServiceIntegrationTest extends DatabaseTestCase
         $this->em->flush();
 
         // Start attempt
-        $attempt = $this->service->start('exam-1', 'student-1');
+        $attempt = $this->service->start($exam->id, 'student-1');
 
         $this->assertEquals('in_progress', $attempt->status);
 

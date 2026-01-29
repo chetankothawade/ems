@@ -21,6 +21,8 @@ export default function AdminExamList() {
     load();
   }, []);
 
+  
+
   const openCreate = () => {
     setSelected(null);
     setShowForm(true);

@@ -52,8 +52,8 @@ describe('AttemptTable', () => {
       }
     ];
     render(<AttemptTable attempts={attempts} />);
-    // For student, should show localized time
-    expect(screen.getByText(/01\/01\/2023/)).toBeInTheDocument();
+    // Should show UTC time in ISO format
+    expect(screen.getByText('2023-01-01 10:00:00.000 UTC')).toBeInTheDocument();
     expect(screen.getByText('-')).toBeInTheDocument(); // for completed_at null
   });
 });
