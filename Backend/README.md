@@ -13,6 +13,30 @@ A simple backend application for Exam Management System built with PHP and Slim 
 
 ## Installation
 
+### Quick Setup (Recommended)
+
+**On macOS/Linux:**
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+**On Windows:**
+```cmd
+setup.bat
+```
+
+This automated setup will:
+1. Create `.env` from `.env.example` (if needed)
+2. Install PHP dependencies
+3. Run database migrations automatically
+4. Seed database with demo data
+5. Verify installation
+
+### Manual Setup
+
+If you prefer manual steps or the automated setup doesn't work:
+
 1. Clone the repository:
    ```bash
    git clone <repository-url>
@@ -24,28 +48,25 @@ A simple backend application for Exam Management System built with PHP and Slim 
    composer install
    ```
 
-3. Copy the environment file and configure your settings:
+3. Copy and configure the environment file:
    ```bash
    cp .env.example .env
    ```
+   Update database credentials in `.env`
 
-4. Set up your database configuration in the `.env` file.
+4. Run migrations:
+   ```bash
+   php bin/console migrations:migrate
+   ```
+
+5. Seed the database:
+   ```bash
+   php bin/console db:seed
+   ```
 
 ## Database Setup
 
 ### Local Setup
-
-#### Create Migrations
-
-Generate a new migration:
-```bash
-php bin/console migrations:generate
-```
-
-Or create from differences:
-```bash
-php bin/console migrations:diff
-```
 
 #### Run Migrations
 
@@ -59,41 +80,38 @@ php bin/console migrations:migrate
 php bin/console db:seed
 ```
 
-### Docker Setup
+### Docker Setup (Automated)
 
-If using Docker, run commands inside the container:
+The Docker setup automatically runs migrations and seeding on container startup:
 
-#### Create Migrations
+1. Build the Docker images:
+   ```bash
+   docker compose build
+   ```
 
-Generate a new migration:
+2. Start the services (migrations and seeding run automatically):
+   ```bash
+   docker compose up
+   ```
+
+The API will be available at `http://localhost:8000` and the database will be fully initialized.
+
+**Note**: To manually run migrations or seeding in an existing container:
 ```bash
-docker compose run api php bin/console migrations:generate
-```
+# Run migrations
+docker compose exec api php bin/console migrations:migrate
 
-Or create from differences:
-```bash
-docker compose run api php bin/console migrations:diff
-```
-
-#### Run Migrations
-
-```bash
-docker compose run api php bin/console migrations:migrate
-```
-
-#### Seed Database
-
-```bash
-docker compose run api php bin/console db:seed
+# Seed database
+docker compose exec api php bin/console db:seed
 ```
 
 ## Running the Application
 
 ### Local Development
 
-Start the development server:
+After running the setup script:
+
 ```bash
-composer dump-autoload
 php -S localhost:8000 -t public
 ```
 
@@ -101,17 +119,13 @@ The API will be available at `http://localhost:8000`.
 
 ### Docker Setup
 
-1. Build the Docker images:
-   ```bash
-   docker compose build
-   ```
+The easiest way to run the application with automated database setup:
 
-2. Start the services:
-   ```bash
-   docker compose up
-   ```
+```bash
+docker compose up
+```
 
-The API will be available at `http://localhost:8000`.
+The API will be available at `http://localhost:8000` with migrations and seeding automatically applied.
 
 ## API Endpoints
 

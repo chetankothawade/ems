@@ -23,11 +23,13 @@ class StudentExamController extends Controller
 
         $exams = $this->examRepo->all();
 
+        // Fetch all attempts for the student in a single query (prevents N+1)
+        $attemptsByExam = $this->attemptRepo->findByStudentGroupedByExam($studentId);
+
         $result = [];
 
         foreach ($exams as $exam) {
-
-            $attempts = $this->attemptRepo->findByStudent($exam->id, $studentId);
+            $attempts = $attemptsByExam[$exam->id] ?? [];
 
             $used = count($attempts);
             $remaining = $exam->max_attempts - $used;

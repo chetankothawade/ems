@@ -35,6 +35,28 @@ class AttemptRepository
         return $this->em->getRepository(Attempt::class)->findBy(['exam_id' => $examId]);
     }
 
+    /**
+     * Fetch all attempts for a student grouped by exam ID.
+     * This is more efficient than querying per exam (N+1 prevention).
+     */
+    public function findByStudentGroupedByExam(string $studentId): array
+    {
+        $attempts = $this->em->getRepository(Attempt::class)->findBy(
+            ['student_id' => $studentId],
+            ['exam_id' => 'ASC', 'attempt_number' => 'ASC']
+        );
+
+        $grouped = [];
+        foreach ($attempts as $attempt) {
+            if (!isset($grouped[$attempt->exam_id])) {
+                $grouped[$attempt->exam_id] = [];
+            }
+            $grouped[$attempt->exam_id][] = $attempt;
+        }
+
+        return $grouped;
+    }
+
     public function deleteByExam(string $examId): void
     {
         $this->em->createQuery(
