@@ -142,6 +142,31 @@ The API will be available at `http://localhost:8000` with migrations and seeding
 - `POST /student/exams/{id}/start` - Start an exam attempt
 - `POST /student/attempts/{id}/submit` - Submit an exam attempt
 
+## Timezone & Localization
+
+All API timestamps are returned in **UTC** (ISO 8601 format: `2024-01-01T10:30:00+00:00`).
+
+**Frontend developers**: See [FRONTEND_TIMEZONE_GUIDE.md](FRONTEND_TIMEZONE_GUIDE.md) for comprehensive instructions on converting UTC times to the user's local timezone.
+
+### Key Points
+
+- Server stores all times in UTC for consistency
+- API returns times in ISO 8601 format with `+00:00` timezone indicator
+- **Clients are responsible for converting to local timezone** for display
+- Use JavaScript's native `Date` API or libraries like Day.js for conversion
+
+### Quick Example (JavaScript)
+
+```javascript
+// Receive from API
+const utcTime = '2024-01-01T10:30:00+00:00';
+
+// Convert to local timezone
+const date = new Date(utcTime);
+console.log(date.toLocaleString()); // Uses browser's timezone
+// Output: "1/1/2024, 2:30:00 PM" (if in EST)
+```
+
 ## Testing
 
 ### Local Setup

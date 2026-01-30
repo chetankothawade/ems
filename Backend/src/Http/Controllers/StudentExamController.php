@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Services\AttemptService;
 use App\Repositories\ExamRepository;
 use App\Repositories\AttemptRepository;
+use App\Support\TimezoneHelper;
 
 class StudentExamController extends Controller
 {
@@ -66,8 +67,8 @@ class StudentExamController extends Controller
                         'id' => $a->id,
                         'attempt_number' => $a->attempt_number,
                         'status' => $a->status,
-                        'started_at' => $a->started_at?->format(DATE_ATOM),
-                        'completed_at' => $a->completed_at?->format(DATE_ATOM),
+                        'started_at' => $a->started_at ? TimezoneHelper::toApiFormat($a->started_at) : null,
+                        'completed_at' => $a->completed_at ? TimezoneHelper::toApiFormat($a->completed_at) : null,
                     ];
                 }, $attempts)
             ];

@@ -41,7 +41,7 @@ describe('AttemptTable', () => {
     expect(screen.getByText('completed')).toBeInTheDocument();
   });
 
-  test('formats time correctly', () => {
+  test('formats time correctly for student (local time)', () => {
     const attempts = [
       {
         id: 1,
@@ -52,7 +52,29 @@ describe('AttemptTable', () => {
       }
     ];
     render(<AttemptTable attempts={attempts} />);
-    // Should show UTC time in ISO format
+    // For student, should show local time, not UTC
+    // The exact format depends on browser locale, but should NOT end with "UTC"
+    const cells = screen.getAllByText((content, element) => {
+      return element && element.tagName === 'TD' && content.includes('2023');
+    });
+    expect(cells.length).toBeGreaterThan(0);
+    // Verify it's NOT showing UTC format for student
+    expect(screen.queryByText(/UTC/)).not.toBeInTheDocument();
+    expect(screen.getByText('-')).toBeInTheDocument(); // for completed_at null
+  });
+
+  test('formats time correctly for admin (UTC time)', () => {
+    const attempts = [
+      {
+        id: 1,
+        attempt_number: 1,
+        status: 'completed',
+        started_at: '2023-01-01T10:00:00Z',
+        completed_at: null
+      }
+    ];
+    render(<AttemptTable attempts={attempts} isAdmin={true} />);
+    // For admin, should show UTC time
     expect(screen.getByText('2023-01-01 10:00:00.000 UTC')).toBeInTheDocument();
     expect(screen.getByText('-')).toBeInTheDocument(); // for completed_at null
   });
