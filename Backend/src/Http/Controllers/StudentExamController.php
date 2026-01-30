@@ -8,6 +8,8 @@ use App\Services\AttemptService;
 use App\Repositories\ExamRepository;
 use App\Repositories\AttemptRepository;
 use App\Support\TimezoneHelper;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class StudentExamController extends Controller
 {
@@ -18,7 +20,7 @@ class StudentExamController extends Controller
     ) {}
 
 
-    public function dashboard($req, $res)
+    public function dashboard(ServerRequestInterface $req, ResponseInterface $res): ResponseInterface
     {
         $studentId = 'student-1'; // later from auth
 
@@ -77,7 +79,7 @@ class StudentExamController extends Controller
         return $this->json($res, $result);
     }
 
-    public function myAttempts($req, $res, $args)
+    public function myAttempts(ServerRequestInterface $req, ResponseInterface $res, array $args): ResponseInterface
     {
         $studentId = 'student-1';
 
@@ -86,7 +88,7 @@ class StudentExamController extends Controller
         return $this->json($res, $attempts);
     }
 
-    public function start($req, $res, $args)
+    public function start(ServerRequestInterface $req, ResponseInterface $res, array $args): ResponseInterface
     {
         try {
             $attempt = $this->service->start($args['id'], 'student-1');
@@ -105,7 +107,7 @@ class StudentExamController extends Controller
         }
     }
 
-    public function submit($req, $res, $args)
+    public function submit(ServerRequestInterface $req, ResponseInterface $res, array $args): ResponseInterface
     {
         $this->service->submit($args['id']);
 

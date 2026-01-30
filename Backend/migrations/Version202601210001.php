@@ -16,52 +16,70 @@ final class Version202601210001 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql("
-        CREATE TABLE exams (
-            id CHAR(36) NOT NULL,
-            title VARCHAR(255) NOT NULL,
-            max_attempts INT NOT NULL,
-            cooldown_minutes INT NOT NULL,
-            created_at DATETIME NOT NULL,
-            updated_at DATETIME NOT NULL,
-            PRIMARY KEY (id)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-    ");
+        /*
+         * EXAMS
+         */
+        $exams = $schema->createTable('exams');
+        $exams->addColumn('id', 'string', ['length' => 36]);
+        $exams->addColumn('title', 'string', ['length' => 255]);
+        $exams->addColumn('max_attempts', 'integer');
+        $exams->addColumn('cooldown_minutes', 'integer');
+        $exams->addColumn('created_at', 'datetime');
+        $exams->addColumn('updated_at', 'datetime');
+        $exams->setPrimaryKey(['id']);
 
-        $this->addSql("
-        CREATE TABLE students (
-            id CHAR(36) NOT NULL,
-            name VARCHAR(255) NOT NULL,
-            created_at DATETIME NOT NULL,
-            PRIMARY KEY (id)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-    ");
 
-        $this->addSql("
-        CREATE TABLE attempts (
-            id CHAR(36) NOT NULL,
-            exam_id CHAR(36) NOT NULL,
-            student_id CHAR(36) NOT NULL,
-            attempt_number INT NOT NULL,
-            status VARCHAR(20) NOT NULL,
-            started_at DATETIME NOT NULL,
-            completed_at DATETIME DEFAULT NULL,
-            PRIMARY KEY (id),
-            INDEX IDX_ATTEMPT_EXAM_STUDENT (exam_id, student_id),
-            INDEX IDX_ATTEMPT_STUDENT_EXAM_NUM (student_id, exam_id, attempt_number),
-            CONSTRAINT FK_ATTEMPT_EXAM FOREIGN KEY (exam_id)
-                REFERENCES exams (id) ON DELETE CASCADE,
-            CONSTRAINT FK_ATTEMPT_STUDENT FOREIGN KEY (student_id)
-                REFERENCES students (id) ON DELETE CASCADE
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-    ");
+        /*
+         * STUDENTS
+         */
+        $students = $schema->createTable('students');
+        $students->addColumn('id', 'string', ['length' => 36]);
+        $students->addColumn('name', 'string', ['length' => 255]);
+        $students->addColumn('created_at', 'datetime');
+        $students->setPrimaryKey(['id']);
+
+
+        /*
+         * ATTEMPTS
+         */
+        $attempts = $schema->createTable('attempts');
+
+        $attempts->addColumn('id', 'string', ['length' => 36]);
+        $attempts->addColumn('exam_id', 'string', ['length' => 36]);
+        $attempts->addColumn('student_id', 'string', ['length' => 36]);
+        $attempts->addColumn('attempt_number', 'integer');
+        $attempts->addColumn('status', 'string', ['length' => 255]);
+        $attempts->addColumn('started_at', 'datetime');
+        $attempts->addColumn('completed_at', 'datetime', ['notnull' => false]);
+
+        $attempts->setPrimaryKey(['id']);
+
+        // indexes (stable names!)
+        $attempts->addIndex(['exam_id', 'student_id'], 'IDX_ATTEMPT_EXAM_STUDENT');
+        $attempts->addIndex(['student_id', 'exam_id', 'attempt_number'], 'IDX_ATTEMPT_STUDENT_EXAM_NUM');
+
+        // foreign keys
+        $attempts->addForeignKeyConstraint(
+            'exams',
+            ['exam_id'],
+            ['id'],
+            ['onDelete' => 'CASCADE'],
+            'FK_ATTEMPT_EXAM'
+        );
+
+        $attempts->addForeignKeyConstraint(
+            'students',
+            ['student_id'],
+            ['id'],
+            ['onDelete' => 'CASCADE'],
+            'FK_ATTEMPT_STUDENT'
+        );
     }
-
 
     public function down(Schema $schema): void
     {
-        $this->addSql("DROP TABLE attempts");
-        $this->addSql("DROP TABLE students");
-        $this->addSql("DROP TABLE exams");
+        $schema->dropTable('attempts');
+        $schema->dropTable('students');
+        $schema->dropTable('exams');
     }
 }

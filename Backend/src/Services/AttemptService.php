@@ -33,8 +33,9 @@ class AttemptService
             $next = $last->completed_at->modify("+{$exam->cooldown_minutes} minutes");
 
             if ($this->clock->now() < $next) {
+                $nextIST = $next->setTimezone(new \DateTimeZone('Asia/Kolkata'));
                 throw new \Exception(
-                    "Your next attempt will be available at {$next->format(DATE_ATOM)}"
+                    "Your next attempt will be available at {$nextIST->format('l, F j, Y \a\t g:i A')} IST"
                 );
             }
         }

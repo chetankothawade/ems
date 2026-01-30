@@ -29,6 +29,8 @@ docker compose up --build
 
 #Run Migrations (First time only)
 docker compose run api php bin/console migrations:migrate
+#Run Seeder
+docker compose run api php bin/console db:seed
 
 # Run the API tests
 # Unit Tests

@@ -24,17 +24,15 @@ $container->set(EntityManager::class, function () {
 
     $connectionParams = [
         'driver'   => 'pdo_mysql',
-        'host'     => $_ENV['DB_HOST'] ?? '127.0.0.1',
-        'port'     => $_ENV['DB_PORT'] ?? 3306,
-        'dbname'   => $_ENV['DB_NAME'] ?? 'ems',
-        'user'     => $_ENV['DB_USER'] ?? 'root',
-        'password' => $_ENV['DB_PASSWORD'] ?? '',
+        'host'     => getenv('DB_HOST') ?: '127.0.0.1',
+        'port'     => getenv('DB_PORT') ?: 3306,
+        'dbname'   => getenv('DB_NAME') ?: 'ems',
+        'user'     => getenv('DB_USER') ?: 'root',
+        'password' => getenv('DB_PASSWORD') ?: '',
         'charset'  => 'utf8mb4',
-
-        //'use_savepoints' => false,
+         //'use_savepoints' => false,
     ];
 
-    
 
     $connection = DriverManager::getConnection($connectionParams, $config);
 
