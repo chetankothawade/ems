@@ -31,9 +31,16 @@ class DatabaseSeeder
             ['student-3', 'Adam Smith'],
         ];
 
-        foreach ($students as [$id, $name]) {
-            $s = new Student();
+        $repo = $this->em->getRepository(Student::class);
 
+        foreach ($students as [$id, $name]) {
+
+            // ✅ skip if already exists
+            if ($repo->find($id)) {
+                continue;
+            }
+
+            $s = new Student();
             $s->id = $id;
             $s->name = $name;
             $s->created_at = $now;
@@ -44,8 +51,16 @@ class DatabaseSeeder
 
     private function seedExams(): void
     {
-        $exam = new Exam();
+        $repo = $this->em->getRepository(Exam::class);
 
+        // choose a unique field (title or fixed id)
+        $existing = $repo->findOneBy(['title' => 'Sample Math Exam']);
+
+        if ($existing) {
+            return;
+        }
+
+        $exam = new Exam();
         $exam->id = Uuid::uuid4()->toString();
         $exam->title = 'Sample Math Exam';
         $exam->max_attempts = 3;

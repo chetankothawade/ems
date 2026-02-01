@@ -33,6 +33,8 @@ docker compose run api php bin/console migrations:migrate
 docker compose run api php bin/console db:seed
 
 # Run the API tests
+# Full test
+docker compose run api composer test
 # Unit Tests
 docker compose run api composer run test:unit
 #Integration tests

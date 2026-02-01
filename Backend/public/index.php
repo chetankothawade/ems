@@ -8,6 +8,7 @@ use DI\Container;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
+use App\Http\Middleware\ValidationExceptionMiddleware;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -39,6 +40,13 @@ $app = AppFactory::create();
 |--------------------------------------------------------------------------
 */
 $app->addBodyParsingMiddleware();
+
+/*
+|--------------------------------------------------------------------------
+| Validation Exception Middleware
+|--------------------------------------------------------------------------
+*/
+$app->add(new ValidationExceptionMiddleware());
 
 /*
 |--------------------------------------------------------------------------

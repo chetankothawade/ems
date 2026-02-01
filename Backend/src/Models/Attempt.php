@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'attempts')]
@@ -31,6 +32,11 @@ class Attempt
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     public ?\DateTimeImmutable $completed_at = null;
+
+    public function __construct()
+    {
+        $this->id = Uuid::uuid4()->toString();
+    }
 }
 
 
