@@ -27,7 +27,7 @@ Nothing else is needed.
 ```bash
 docker compose up --build
 
-#Run Migrations (First time only)
+#Run Migrations (First time only) - Now added in docker compose up 
 docker compose run api php bin/console migrations:migrate
 #Run Seeder
 docker compose run api php bin/console db:seed
@@ -50,6 +50,6 @@ docker compose build --no-cache
 docker compose up
 
 
-#Open URL FOR Preview
+# Open URL FOR Preview
 http://localhost:3000/#/admin
 http://localhost:3000/#/student
